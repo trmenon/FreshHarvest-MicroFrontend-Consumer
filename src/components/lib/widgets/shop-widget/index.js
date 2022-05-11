@@ -36,6 +36,8 @@ import Badge from '@mui/material/Badge';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 
 // Services imports
 import {
@@ -137,7 +139,7 @@ class ShopWidget extends Component {
     }
 
     componentDidUpdate() {
-        console.log(this.state);
+        // console.log(this.state);
     }
 
     updateStockList = ()=> {
@@ -393,7 +395,7 @@ class ShopWidget extends Component {
                                                 <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                                                     {this.state.cart.data.data.map((item)=> {
                                                         return (
-                                                            <ListItem>
+                                                            <ListItem key={item?._id}>
                                                                 <ListItemAvatar>
                                                                     <Avatar 
                                                                         alt={item._id} 
@@ -488,97 +490,81 @@ class ShopWidget extends Component {
                         </strong>
                     </Alert>                    
                     :
-                    <List sx={{ width: 'inherit', bgcolor: 'background.paper' }}>
+                    <List sx={{width: '100%'}}>
                         {this.state.stocks.data.map((element)=> {
                             return(
-                                <React.Fragment>
-                                    <ListItem alignItems="flex-start" key={element.surplusId}>
-                                        <Card 
-                                            sx={{ 
-                                                width: 'inherit', 
-                                                backgroundColor: 'inherit',
-                                                border: 0,
-                                                boxShadow: 0 
-                                            }}
-                                        >
-                                            <CardHeader
-                                                title={element.surplusName}
-                                                titleTypographyProps={{
-                                                    color: '#424242',
-                                                    fontFamily:'Roboto',
-                                                    textTransform: 'capitalize'
-                                                }}
-                                            />       
-                                            <CardContent>
-                                                <Grid 
-                                                    container 
-                                                    spacing={{ xs: 1, sm: 2, md: 3, lg: 4 }} 
-                                                    columns={{ xs: 1, sm: 2, md: 3, lg: 4 }}
-                                                >
-                                                    {element.stock.map((item)=> {
-                                                        return (
-                                                            <Grid item key={item.stockId}>
-                                                                <Card sx={{width: 300}} raised>
-                                                                    <CardHeader
-                                                                        avatar={
-                                                                            <Avatar sx={{ bgcolor: deepOrange[900] }}>
-                                                                                {item?.farm?.owner?.name.split(' ')[0][0]}
-                                                                                {item?.farm?.owner?.name.split(' ')[1][0]}
-                                                                            </Avatar>}
-                                                                        title= {item?.farm?.name}
-                                                                        subheader={item?.farm?.owner?.name}
-                                                                    />
-                                                                    <CardContent>
-                                                                        {item.mediaPresent === true?
-                                                                            <CardMedia
-                                                                                component="img"
-                                                                                image={item.mediaUrl}
-                                                                                alt={element.surplusName}
-                                                                                height={180}
-                                                                            />
-                                                                            :
-                                                                            <Thumbnail width="300px" height="180px"/>
-                                                                        }
-                                                                    </CardContent>
-                                                                    <CardActionArea>
-                                                                        <CardActions >
-                                                                            <Chip 
-                                                                                label={`${item.stock} available`} 
-                                                                                variant="outlined" 
-                                                                                color="secondary"
-                                                                            />
-                                                                            <Chip 
-                                                                                icon={<CurrencyRupeeIcon />}
-                                                                                label={`${item.unitPrice}`} 
-                                                                                variant="outlined" 
-                                                                                color="primary"
-                                                                            />
-                                                                            <IconButton 
-                                                                                aria-label="add to favorites"
-                                                                                onClick={()=>this.handleAddToCart(item)}
-                                                                            >
-                                                                                <AddShoppingCartIcon />
-                                                                            </IconButton>
-                                                                        </CardActions>
-                                                                    </CardActionArea>                                                                    
-                                                                </Card>
-                                                            </Grid>
-                                                        );
-                                                    })}
-                                                </Grid>
-                                            </CardContent>
-                                        </Card>                                    
-                                    </ListItem>
-                                    <Divider variant="middle" light/>
-                                </React.Fragment>
+                                <ListItem alignItems="flex-start" key={element.surplusId}>
+                                    <Paper elevation={4} sx={{my: 2, width: '100%'}}>
+                                        <Typography variant="h6" sx={{p: 4}}>
+                                            {element?.surplusName.toUpperCase()}
+                                        </Typography>
+                                        <Divider sx={{mb: 2}}/>
+                                        {element?.stock.length === 0?
+                                            <Typography variant="subtitle2" sx={{p: 2}}>
+                                                Nothing to show here
+                                            </Typography>
+                                            :
+                                            <Grid 
+                                                container 
+                                                spacing={{ xs: 1, sm: 2, md: 3, lg: 4 }} 
+                                                columns={{ xs: 1, sm: 2, md: 3, lg: 4 }}
+                                            >
+                                                {element?.stock.map((item)=> {
+                                                    return (
+                                                        <Grid item key={item.stockId}>
+                                                            <Card sx={{width: '300px', m: 2}} raised>
+                                                                <CardHeader
+                                                                    avatar={
+                                                                        <Avatar sx={{ bgcolor: deepOrange[900] }}>
+                                                                            {item?.farm?.owner?.name[0]}
+                                                                        </Avatar>}
+                                                                    title= {item?.farm?.name}
+                                                                    subheader={item?.farm?.owner?.name}
+                                                                />
+                                                                <CardContent>
+                                                                    {item.mediaPresent === true?
+                                                                        <CardMedia
+                                                                            component="img"
+                                                                            image={item.mediaUrl}
+                                                                            alt={element.surplusName}
+                                                                            height={180}
+                                                                        />
+                                                                        :
+                                                                        <Thumbnail width="300px" height="180px"/>
+                                                                    }
+                                                                </CardContent>
+                                                                    <CardActions >
+                                                                        <Chip 
+                                                                            label={`${item.stock} available`} 
+                                                                            variant="outlined" 
+                                                                            color="secondary"
+                                                                        />
+                                                                        <Chip 
+                                                                            icon={<CurrencyRupeeIcon />}
+                                                                            label={`${item.unitPrice}`} 
+                                                                            variant="outlined" 
+                                                                            color="primary"
+                                                                        />
+                                                                        <IconButton 
+                                                                            aria-label="add to favorites"
+                                                                            onClick={()=>this.handleAddToCart(item)}
+                                                                        >
+                                                                            <AddShoppingCartIcon />
+                                                                        </IconButton>
+                                                                    </CardActions>
+                                                            </Card>
+                                                        </Grid>
+                                                    )
+                                                })}
+                                            </Grid>
+                                        }                                        
+                                    </Paper>
+                                </ListItem>
                             )
                         })}
-                    </List>
-                }              
-                
-                
-            </React.Fragment>   
-            
+                    </List>                    
+                }               
+            </React.Fragment>               
         )
     }
 }
